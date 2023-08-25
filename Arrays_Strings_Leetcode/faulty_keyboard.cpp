@@ -1,0 +1,30 @@
+// Your laptop keyboard is faulty, and whenever you type a character 'i' on it, it reverses the string that you have written. Typing other characters works as expected.
+
+// You are given a 0-indexed string s, and you type each character of s using your faulty keyboard.
+
+// Return the final string that will be present on your laptop screen.
+
+// Input: s = "string"
+// Output: "rtsng"
+#include <iostream>
+#include <string>
+
+class Solution
+{
+public:
+    string finalString(string s)
+    {
+        string newstr = "";
+        int n = s.length();
+        for (int i = 0; i < n; i++)
+        {
+            if (s[i] == 'i')
+            {
+                reverse(newstr.begin(), newstr.end());
+                continue;
+            }
+            newstr += s[i];
+        }
+        return newstr;
+    }
+};
