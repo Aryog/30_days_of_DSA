@@ -15,17 +15,8 @@
 class Solution
 {
 public:
-    int static t[2001][2001];
-    Solution()
+    bool isPalindrome(string &s, int i, int j)
     {
-        memset(t, -1, sizeof(t));
-    }
-    bool isPalindrome(string s, int i, int j)
-    {
-        if (i >= j)
-        {
-            return true;
-        }
         while (i < j)
         {
             if (s[i] != s[j])
@@ -35,39 +26,25 @@ public:
         }
         return true;
     }
-    int minPalinPartition(string s, int i, int j)
+    int minPalinPartition(string &s, int i, int j, vector<int> &dp)
     {
         if (i >= j || isPalindrome(s, i, j))
         {
             return 0;
         }
-        if (t[i][j] != -1)
+        if (dp[i] != -1)
         {
-            return t[i][j];
+            return dp[i];
         }
         int mn = INT_MAX;
         for (int k = i; k <= j - 1; k++)
         {
-            int left;
-            int right;
-            if (t[i][k] != -1)
-                left = t[i][k];
-            else
+            if (isPalindrome(s, i, k))
             {
-                left = minPalinPartition(s, i, k);
-                t[i][k] = left;
+                int temp = minPalinPartition(s, k + 1, j, dp) + 1;
+                mn = min(mn, temp);
+                dp[i] = mn;
             }
-
-            if (t[k + 1][j] != -1)
-                right = t[k + 1][j];
-            else
-            {
-                right = minPalinPartition(s, k + 1, j);
-                t[k + 1][j] = right;
-            }
-            int tMin = left + right + 1;
-            mn = min(mn, tMin);
-            t[i][j] = mn;
         }
         return mn;
     }
@@ -75,7 +52,8 @@ public:
     {
         // Using the DP as MCM problem to solve
         int len = s.length();
-        return minPalinPartition(s, 0, len - 1);
+        /* Only i is changing so 1D DP used*/
+        vector<int> dp(len + 1, -1);
+        return minPalinPartition(s, 0, len - 1, dp);
     }
 };
-int Solution::t[2001][2001];
