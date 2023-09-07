@@ -5,78 +5,80 @@
 // to true in 4 ways ((T|T)&(F^T)),
 // (T|(T&(F^T))), (((T|T)&F)^T) and (T|((T&F)^T)).
 
+// Your Task:
+// You do not need to read input or print anything. Your task is to complete the function countWays()
+// which takes N and S as input parameters and returns number of possible ways modulo 1003.
+
 class Solution
 {
 public:
-    int SolveRecurr(string s, int i, int j, bool isTrue)
+    unordered_map<string, int> mpp;
+    int solve(string s, int i, int j, bool isTrue)
     {
-        // base condition
         if (i > j)
-        {
             return false;
-        }
         if (i == j)
         {
             if (isTrue == true)
-            {
                 return s[i] == 'T';
-            }
             else
-            {
                 return s[i] == 'F';
-            }
         }
 
+        string temp = to_string(i) + " " + to_string(j) + " " + to_string(isTrue);
+        if (mpp.find(temp) != mpp.end())
+            return mpp[temp];
         int ans = 0;
         for (int k = i + 1; k <= j - 1; k += 2)
         {
-            int lT = SolveRecurr(s, i, k - 1, true);
-            int lF = SolveRecurr(s, i, k - 1, false);
-            int rT = SolveRecurr(s, k + 1, j, true);
-            int rF = SolveRecurr(s, k + 1, j, false);
+            int lT = solve(s, i, k - 1, true);
+            int lF = solve(s, i, k - 1, false);
+            int rT = solve(s, k + 1, j, true);
+            int rF = solve(s, k + 1, j, false);
 
-            // now we will check for each operator (&, |, ^)
             if (s[k] == '&')
             {
-                if (isTrue == true)
+                if (isTrue)
                 {
-                    ans += (lT * rT); // both should be true
+                    ans = (ans + (lT * rT) % 1003) % 1003;
                 }
                 else
                 {
-                    ans += (lF * rT) + (lT * rF) + (lF * rF); // any one / both should be false
+                    ans = (ans + (lT * rF) % 1003 + (lF * rT) % 1003 + (lF * rF) % 1003) % 1003;
                 }
             }
             else if (s[k] == '|')
             {
-                if (isTrue == true)
+                if (isTrue)
                 {
-                    ans += (lT * rT) + (lT * rF) + (lF * rT); // any one should be true
+                    ans = (ans + (lT * rF) % 1003 + (lF * rT) % 1003 + (lT * rT) % 1003) % 1003;
                 }
                 else
                 {
-                    ans += (lF * rF); // both should be false
+                    ans = (ans + (lF * rF) % 1003) % 1003;
                 }
             }
-            else if (s[k] == '^')
+            else
             {
-                if (isTrue == true)
+                if (isTrue)
                 {
-                    ans += (lT * rF) + (lF * rT); // xor condition
+                    ans = (ans + (lT * rF) % 1003 + (lF * rT) % 1003) % 1003;
                 }
                 else
                 {
-                    ans += (lT * rT) + (lF * rF);
+                    ans = (ans + (lF * rF) % 1003 + (lT * rT) % 1003) % 1003;
                 }
             }
         }
-        return ans;
+        return mpp[temp] = ans;
     }
+
     int countWays(int N, string S)
     {
-        // code here
+        // Code here
         // Here I am using the recursive approach at first
-        // Question is asking to find min ways that makes the expression True hence passing true
-        return SolveRecurr(S, 0, N - 1, true);
+        // Question is asking to find min ways that make the expression True hence passing true
+        mpp.clear();
+        return solve(S, 0, N - 1, true);
     }
 };
