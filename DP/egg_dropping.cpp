@@ -8,19 +8,30 @@
 
 class Solution
 {
+    // DP code with memoization.
 public:
-    int superEggDrop(int k, int n)
+    static int dp[101][10001];
+    int solve(int k, int n)
     {
         if (n == 0 || n == 1)
             return n;
         if (k == 1)
             return n;
+
+        if (dp[k][n] != -1)
+            return dp[k][n];
         int mn = INT_MAX;
         for (int f = 1; f <= n; f++)
         {
-            int temp = 1 + max(superEggDrop(k - 1, f - 1), superEggDrop(k, n - f));
+            int temp = 1 + max(solve(k - 1, f - 1), solve(k, n - f));
             mn = min(mn, temp);
         }
-        return mn;
+        return dp[k][n] = mn;
+    }
+    int superEggDrop(int k, int n)
+    {
+        memset(dp, -1, sizeof(dp));
+        return solve(k, n);
     }
 };
+int Solution::dp[101][10001];
