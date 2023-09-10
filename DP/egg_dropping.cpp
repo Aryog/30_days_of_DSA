@@ -8,7 +8,7 @@
 
 class Solution
 {
-    // DP code with memoization.
+    // Binary Search solution used with DP
 public:
     static int dp[101][10001];
     int solve(int k, int n)
@@ -20,10 +20,21 @@ public:
 
         if (dp[k][n] != -1)
             return dp[k][n];
-        int mn = INT_MAX;
-        for (int f = 1; f <= n; f++)
+        int mn = INT_MAX, l = 1, h = n, temp = 0;
+        while (l <= h)
         {
-            int temp = 1 + max(solve(k - 1, f - 1), solve(k, n - f));
+            int mid = (l + h) / 2;
+            int left = solve(k - 1, mid - 1); // egg broken check for down floors
+            int right = solve(k, n - mid);    // not broken check for up floors
+            temp = 1 + max(left, right);
+            if (left < right)
+            {
+                l = mid + 1; // l = mid + 1 to gain more temp for worst case
+            }
+            else
+            {
+                h = mid - 1;
+            }
             mn = min(mn, temp);
         }
         return dp[k][n] = mn;
