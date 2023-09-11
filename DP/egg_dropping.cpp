@@ -6,6 +6,16 @@
 
 // Return the minimum number of moves that you need to determine with certainty what the value of f is.
 
+// Example 1:
+
+// Input: k = 1, n = 2
+// Output: 2
+// Explanation:
+// Drop the egg from floor 1. If it breaks, we know that f = 0.
+// Otherwise, drop the egg from floor 2. If it breaks, we know that f = 1.
+// If it does not break, then we know f = 2.
+// Hence, we need at minimum 2 moves to determine with certainty what the value of f is.
+
 class Solution
 {
     // Binary Search solution used with DP
