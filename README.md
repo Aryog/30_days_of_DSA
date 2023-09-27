@@ -1,2 +1,2 @@
-# 37 DAYS of DSA
+# 30 DAYS of DSA
 
